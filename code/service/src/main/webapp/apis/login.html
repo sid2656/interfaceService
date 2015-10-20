@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN"  ng-app>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="max-age=7200" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="HandheldFriendly" content="True" />
+<meta name="MobileOptimized" content="320" />
+    <title>奶瓶快跑接口管理登录页面</title>
+    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+    <link href="statics/css/base.css" rel="stylesheet">
+	<link href="statics/css/docs.min.css" rel="stylesheet">
+	<link href="statics/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/css">
+        h1,h2,h3,h4,h5{font-weight: bold;}
+        .apiitem{margin:10px 0px;}
+        .resultbox *{font-size:12px;}
+    </style>
+</head>
+<body class="container" ng-controller="APIManageCtrl">
+<header class="header">
+    <div class="row-fluid" >
+        <div class="" style="position:relative;">
+            <a class="logo" href="/">接口管理登录页面</a>
+				<div style="float:right;margin:10px;">
+					<a href="index.html">展示界面</a>
+				</div>
+        </div>
+        
+        <br style="clear:both;" />
+    </div>
+</header>
+<main class="row-fluid" style="margin-top:30px;">
+	<div class="panel panel-default">
+	  <div class="panel-heading">登录管理</div>
+	  <div class="panel-body">
+	    <div class="">
+		<form>
+		  <div class="form-group col-md-4">
+		    <label for="exampleInputEmail1"></label>
+		  </div>
+		  <div class="form-group col-md-1">
+		    <label for="exampleInputEmail1">用户名：</label>
+		  </div>
+		  <div class="form-group col-md-4">
+		    <input type="text" placeholder="请输入登录用户名" class="form-control" ng-model="newinterface.username">
+		  </div>
+		  <div class="form-group col-md-3">
+		    <label for="exampleInputEmail1"></label>
+		  </div>
+		  <div class="form-group col-md-4">
+		    <label for="exampleInputEmail1"></label>
+		  </div>
+		  <div class="form-group col-md-1">
+		    <label for="exampleInputEmail1">密码：</label>
+		  </div>
+		  <div class="form-group col-md-4">
+		    <input type="password" placeholder="请输入密码" class="form-control" ng-model="newinterface.password">
+		  </div>
+		  <div class="form-group col-md-3">
+		    <label for="exampleInputEmail1"></label>
+		  </div>
+		  <div class="form-group col-md-11">
+		    <label for="exampleInputEmail1"></label>
+		  </div>
+		  <div class="form-group col-md-1">
+		    <button type="button" class="btn btn-primary" ng-click="submit()">登录</button>
+		  </div>
+		  
+		</form>
+	</div>
+	  </div>
+	</div>
+</main> 
+<script src="statics/js/jquery.min.js"></script>
+<script src="statics/js/jquery.json.js"></script>
+<script src="statics/js/bootstrap.min.js"></script>
+<script src="statics/js/angular.min.js"></script>
+<script src="statics/js/lib.js"></script>
+<script src="statics/js/apis.js"></script>
+	<script>
+		function APIManageCtrl($scope,$http) {
+			$scope.submit=function(){
+				console.log($scope.newinterface);
+				$http({
+	                method  : 'POST',
+	                url     : '/apis/manager/login',
+	                data    :$scope.newinterface
+	            }).success(function(data){
+	            	location.href = data;
+	            })
+			}
+			function init(){
+				$scope.newinterface={};
+			}
+			init();
+		}
+	</script>
+</body>
+</html>

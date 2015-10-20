@@ -1,0 +1,109 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN"  ng-app>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="max-age=7200" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="HandheldFriendly" content="True" />
+<meta name="MobileOptimized" content="320" />
+    <title>奶瓶快跑接口调试</title>
+
+    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+    <link href="statics/css/base.css" rel="stylesheet">
+	<link href="statics/css/docs.min.css" rel="stylesheet">
+	<link href="statics/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/css">
+        h1,h2,h3,h4,h5{font-weight: bold;}
+        .apiitem{margin:10px 0px;}
+        .resultbox *{font-size:12px;}
+    </style>
+</head>
+<body style="over-flow:hidden;" ng-controller="APIListCtrl">
+<header class="header">
+    <div class="row-fluid" >
+        <div class="" style="position:relative;">
+            <a class="logo" href="/">奶瓶快跑接口调试工具</span></a>
+
+        </div>
+        
+        <br style="clear:both;" />
+    </div>
+</header>
+<main class="row-fluid">
+	
+    <div class="col-md-4">
+        <div class='leftbox col-md-11' style="padding:0;overflow:scroll">
+        <div class="apiitem bs-callout bs-callout-info col-md-12">
+				<h4>{{data.name}}</h4>
+				<form  method="post" class="form-horizontal submitform" autocomplete="on" target="blank">
+					<div class="form-group col-md-12" ng-repeat="param in data.inparams">
+					    <label for="inputEmail3" class="col-sm-3 control-label">{{param.name}}</label>
+					    <div class="col-sm-9">
+					      <input type="text" ng-model="params[param.name]" class="form-control" id="inputEmail3">
+					    </div>
+					 </div>
+					<div class="form-group" style="clear:both;padding-left:30px;">
+						<input type="button" class="btn btn-primary submitbtn" style='width:100px;margin-top:10px;' ng-click="submit()" value="提交">
+					</div>
+				</form>
+			</div>
+		</div>
+    </div>
+    <div class="col-md-8" style="padding:0;">
+        <div style="padding:10px;font-size:16px;border-bottom:solid 1px #ddd;line-height:20px;" class="navi">
+            输出数据
+        </div>
+        <div id="json-response-target" class="resultbox"  style="padding:20px;border-right:solid 1px #ddd;border-radius:0;resize: none;overflow-y:scroll; outline:none;">
+        </div>
+        
+    </div>
+    <br style="clear:both;" />
+</main> 
+<script src="statics/js/jquery.min.js"></script>
+<script src="statics/js/jquery.json.js"></script>
+<script src="statics/js/bootstrap.min.js"></script>
+<script src="statics/js/angular.min.js"></script>
+<script src="statics/js/lib.js"></script>
+<script>
+		
+
+		function APIListCtrl($scope,$http) {
+			
+			
+			$scope.submit=function(){
+				console.log($scope.params);
+				 $http({
+					method : 'POST',
+					url :$scope.data.address,
+					params:$scope.params
+				}).success(function(data) {
+					console.log(data);
+					     $scope.responsedata= new JSONFormat(JSON.stringify(data),4).toString();
+						$("#json-response-target").html($scope.responsedata);
+				}) 
+			}
+			function init(){
+				var id=window.location.href.match(/[\da-zA-Z]*?$/);
+				console.log(id);
+				$http({
+					method : 'GET',
+					url : '/api/babyrun/doc/one/'+id
+				}).success(function(data) {
+					console.log(data);
+					$scope.data=data;
+					$scope.params={};
+					for(var i=0;i<data.inparams.length;i++){
+						$scope.params[data.inparams[i].name]="";
+					}
+				})
+			}
+			init();
+			
+			
+		}
+	</script>
+</body>
+</html>

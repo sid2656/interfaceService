@@ -1,0 +1,146 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="max-age=7200" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="HandheldFriendly" content="True" />
+<meta name="MobileOptimized" content="320" />
+<title>奶瓶快跑接口调试</title>
+
+<link href="statics/css/document.css" rel="stylesheet">
+<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+<link href="statics/css/base.css" rel="stylesheet">
+<link href="statics/css/docs.min.css" rel="stylesheet">
+<link href="statics/css/font-awesome.min.css" rel="stylesheet">
+<style type="text/css">
+h1, h2, h3, h4, h5 {
+	font-weight: bold;
+}
+
+.apiitem {
+	margin: 10px 0px;
+}
+
+.resultbox * {
+	font-size: 12px;
+}
+</style>
+</head>
+<body class="container" ng-controller="APIListCtrl" style="position:relative;">
+	<header class="header">
+		<div class="row-fluid">
+			<div class="" style="position: relative;">
+				<a class="logo" href="/">奶瓶快跑接口调试工具</span></a>
+			</div>
+
+			<br style="clear: both;" />
+		</div>
+	</header>
+	<main class="row-fluid" style="margin-top:30px;">
+	<div class="col-md-3 menu" style="  position: absolute; left: 0px;top: 110px;overflow-y:scroll;max-height:500px;">
+		<nav class="col-md-11" style="padding:0px;margin-bottom:10px;">
+		<input type="search" class="form-control" ng-model="search" placeholder="输入关键词检索接口">
+        </nav>
+		<div ng-repeat="item in list.results | filter:search">
+			<a href="#{{item.objectId}}" ng-if="item.published" >{{item.name}}</a>
+			<a  href="#{{item.objectId}}" style='color:#666;text-decoration:none;'  ng-if="!item.published" >{{item.name}}(未发布)</a>
+		</div>
+	</div>
+	<div class="panel panel-default col-md-9 col-md-offset-3">
+		<div class="panel-body">
+			<div class="api-content" style="width:100%;border-bottom:1px solid #ddd;" ng-repeat="item in list.results">
+
+				<h1 id="{{item.objectId}}">{{item.name}}<span style="font-size:14px;color:#999;" ng-if="!item.published">(未发布)</span></h1>
+				<a href="javascript:;" ng-click="testapi(item.objectId)" style='font-size:14px;text-decoration:underline;display:block;'>{{item.address}}</a>
+				<div style="color:#666;padding:0px;margin-left:0px;">作者：{{item.author}}</div>
+				<h2>描述</h2>
+
+				<p>{{item.desc}}</p>
+				
+
+				<h3>请求参数</h3>
+
+				<table>
+					<thead>
+						<tr>
+							<td align="left">参数名称</td>
+							<td align="left">参数类型</td>
+							<td align="left">是否必选</td>
+							<td align="left">参数备注</td>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr ng-repeat="inparam in item.inparams">
+							<td align="center">{{inparam.name}}</td>
+							<td align="center">{{inparam.type}}</td>
+							<td align="center">{{inparam.required?"是":"否"}}</td>
+							<td align="left">{{inparam.desc}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<h3>输出参数</h3>
+
+				<table>
+					<thead>
+						<tr>
+							<td align="left">参数名称</td>
+							<td align="left">参数类型</td>
+							<td align="left">参数备注</td>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr ng-repeat="inparam in item.outparams">
+							<td align="center">{{inparam.name}}</td>
+							<td align="center">{{inparam.type}}</td>
+							<td align="left">{{inparam.desc}}</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
+			
+		</div>
+	</div>
+	</main>
+	<script src="statics/js/jquery.min.js"></script>
+	<script src="statics/js/jquery.json.js"></script>
+	<script src="statics/js/bootstrap.min.js"></script>
+	<script src="statics/js/angular.min.js"></script>
+	<script src="statics/js/lib.js"></script>
+	<script src="statics/js/apis.js"></script>
+	<script>
+		function APIListCtrl($scope, $http) {
+			$scope.fetchlist = function() {
+				$http({
+					method : 'GET',
+					url : '/api/babyrun/doc/list'
+				}).success(function(data) {
+					console.log(data);
+					$scope.list = data;
+				})
+			}
+			$scope.testapi=function(id){
+				window.open('test.html#'+id);
+			}
+			function init() {
+				$scope.fetchlist();
+			}
+			init();
+		}
+		$(function(){
+			$(window).scroll(function(dat){
+				if($(document).scrollTop()>120){
+					$(".menu").css({top:($(document).scrollTop()+30)});
+					
+				}
+			});
+		})
+	</script>
+</body>
+</html>

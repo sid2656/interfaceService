@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN"  ng-app>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="max-age=7200" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="HandheldFriendly" content="True" />
+<meta name="MobileOptimized" content="320" />
+    <title>奶瓶快跑接口新增</title>
+
+    <link href="../statics/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../statics/css/base.css" rel="stylesheet">
+	<link href="../statics/css/docs.min.css" rel="stylesheet">
+	<link href="../statics/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/css">
+        h1,h2,h3,h4,h5{font-weight: bold;}
+        .apiitem{margin:10px 0px;}
+        .resultbox *{font-size:12px;}
+    </style>
+</head>
+<body class="container" ng-controller="APIManageCtrl">
+<header class="header">
+    <div class="row-fluid" >
+        <div class="" style="position:relative;">
+            <a class="logo" href="/">奶瓶快跑接口管理工具</span></a>
+			<div style="float:right;margin:10px;">
+				<a href="../index.html">展示界面</a>
+			</div>
+			<div style="float:right;margin:10px;">
+				<a href="javascript:void(0);" ng-click="logout()">登出</a>
+			</div>
+        </div>
+        
+        <br style="clear:both;" />
+    </div>
+</header>
+<main class="row-fluid" style="margin-top:30px;">
+	
+	<div class="panel panel-default">
+	  <div class="panel-heading">新增接口</div>
+	  <div class="panel-body">
+	    <div class="">
+		<form>
+		  <div class="form-group col-md-3">
+		    <label for="exampleInputEmail1">接口名称</label>
+		    <input type="text" placeholder="请输入接口名称" class="form-control" ng-model="newinterface.name">
+		  </div>
+		  <div class="form-group col-md-5">
+		    <label for="exampleInputEmail1">接口地址</label>
+		    <input type="text" placeholder="请输入相对地址，比如/api/user/list" class="form-control" ng-model="newinterface.address">
+		  </div>
+		  <div class="form-group col-md-2">
+		    <label for="exampleInputEmail1">接口作者</label>
+		    <input type="text" placeholder="请输入作者姓名" class="form-control" ng-model="newinterface.author">
+		  </div>
+		  <div class="form-group col-md-1">
+		    <label for="exampleInputEmail1">是否私有</label>
+		    <input type="checkbox" ng-model="newinterface.private">
+		  </div>
+		  <div class="form-group col-md-1">
+		    <label for="exampleInputEmail1">是否发布</label>
+		    <input type="checkbox" ng-model="newinterface.published">
+		  </div>
+		  <div class="form-group col-md-12">
+		    <label for="exampleInputPassword1">接口描述</label>
+		    <textarea class="form-control" rows="3" placeholder="请描述该接口作用" ng-model="newinterface.desc"></textarea>
+		  </div>
+		  <div class="form-group col-md-12">
+		    <label for="exampleInputFile">输入参数<span class="glyphicon glyphicon-plus btn btn-default" ng-click="addinparam()">新增参数</span></label>
+		    <table class="table table-bordered">
+			  <thead>
+			  	<tr>
+			  		<th>参数名称</th>
+			  		<th>参数类型</th>
+			  		<th>是否必填</th>
+			  		<th>备注</th>
+			  		<th>操作</th>
+			  	</tr>
+			  </thead>
+			  <tbody>
+			  	<tr ng-repeat="(idx,param) in newinterface.inparams">
+			  		<td>
+			  			<input type="text" placeholder="请输入参数名称" class="form-control" ng-model="param.name">
+			  		</td>
+			  		<td>
+			  			<select class="form-control" ng-model="param.type" ng-options="o.key  as o.val for o in paramtype">
+			  				<option value="">请选择参数类型</option>
+			  			</select>
+			  		</td>
+			  		<td>
+			  			<input type="checkbox" ng-model="param.required">
+			  		</td>
+			  		<td>
+			  			<textarea class="form-control" rows="1" ng-model="param.desc" placeholder="请输入参数描述"></textarea>
+			  		</td>
+			  		<td>
+			  			<input type="button" class="btn btn-danger" ng-click="delinparam(idx)" value="删除"/>
+			  		</td>
+			  	</tr>
+			  </tbody>
+			</table>
+		  </div>
+		  <div class="form-group col-md-12">
+		    <label for="exampleInputFile">输出参数<span class="glyphicon glyphicon-plus btn btn-default" ng-click="addoutparam()">新增参数</span></label>
+		    <table class="table table-bordered">
+			  <thead>
+			  	<tr>
+			  		<th>参数名称</th>
+			  		<th>参数类型</th>
+			  		<th>备注</th>
+			  		<th>操作</th>
+			  	</tr>
+			  </thead>
+			  <tbody>
+			  	<tr ng-repeat="(idx,param) in newinterface.outparams">
+			  		<td>
+			  			<input type="text" placeholder="请输入参数名称" class="form-control" ng-model="param.name">
+			  		</td>
+			  		<td>
+			  			<select class="form-control" ng-model="param.type" ng-options="o.key  as o.val for o in paramtype">
+			  				<option value="">请选择参数类型</option>
+			  			</select>
+			  		</td>
+			  		<td>
+			  			<textarea class="form-control" rows="1" ng-model="param.desc" placeholder="请输入参数描述"></textarea>
+			  		</td>
+			  		<td>
+			  			<input type="button" class="btn btn-danger" ng-click="deloutparam(idx)" value="删除"/>
+			  		</td>
+			  	</tr>
+			  </tbody>
+			</table>
+		  </div>
+		  <div class="form-group col-md-12">
+		    <button type="button" class="btn btn-primary" ng-click="submit()">提交</button>
+		  </div>
+		  
+		</form>
+	</div>
+	  </div>
+	</div>
+	<div class="panel panel-default">
+	  <div class="panel-heading">接口列表</div>
+	  <div class="panel-body">
+	  	<table class="table table-bordered">
+			  <thead>
+			  	<tr>
+			  		<th>接口名称</th>
+			  		<th>接口地址</th>
+			  		<th>接口描述</th>
+			  		<th>是否私有</th>
+			  		<th>发布</th>
+			  		<th>操作</th>
+			  		
+			  	</tr>
+			  </thead>
+			  <tbody>
+			  	<tr ng-repeat="param in list.results" style="{{param.published?'color:#000;':'color:#999'}}">
+			  		<td>
+			  			{{param.name}}
+			  		</td>
+			  		<td>
+			  			{{param.address}}
+			  		</td>
+			  		<td>
+			  			{{param.desc}}
+			  		</td>
+			  		<td>
+			  			{{param.private?"是":"否"}}
+			  		</td>
+			  		<td>
+			  			{{param.published?"是":"否"}}
+			  		</td>
+			  		<td>
+			  			<input type="button" ng-click="edit(param.objectId)" value="修改" class='btn btn-default'>
+			  		</td>
+			  	</tr>
+			  </tbody>
+			</table>
+	  </div>
+	</div>
+</main> 
+<script src="../statics/js/jquery.min.js"></script>
+<script src="../statics/js/jquery.json.js"></script>
+<script src="../statics/js/bootstrap.min.js"></script>
+<script src="../statics/js/angular.min.js"></script>
+<script src="../statics/js/lib.js"></script>
+<script src="../statics/js/apis.js"></script>
+	<script>
+		Array.prototype.remove=function(dx) 
+		{ 
+		    if(isNaN(dx)||dx>this.length){return false;} 
+		    for(var i=0,n=0;i<this.length;i++) 
+		    { 
+		        if(this[i]!=this[dx]) 
+		        { 
+		            this[n++]=this[i] 
+		        } 
+		    } 
+		    this.length-=1 
+		} 
+		function APIManageCtrl($scope,$http) {
+			
+			$scope.edit=function(id){
+				$http({
+					method:'GET',
+					url:'/api/babyrun/doc/one/'+id
+				}).success(function(data){
+					console.log(data);
+					$scope.newinterface=data;
+				})
+			}
+			$scope.delinparam=function(id){
+				if(confirm("确实要删除该参数么？")){
+					$scope.newinterface.inparams.remove(id);
+				}
+			}
+			$scope.deloutparam=function(id){
+				if(confirm("确实要删除该参数么？")){
+					$scope.newinterface.outparams.remove(id);
+				}
+			}
+			$scope.fetchlist=function(){
+				$http({
+	                method  : 'GET',
+	                url     : '/api/babyrun/doc/list'
+	            }).success(function(data){
+	            	console.log(data);
+	            	$scope.list=data;
+	            })
+			}
+			$scope.submit=function(){
+				console.log($scope.newinterface);
+				$http({
+	                method  : 'POST',
+	                url     : '/api/babyrun/doc/add',
+	                data    :$scope.newinterface
+	            }).success(function(data){
+	            	$scope.fetchlist();
+	            	init();
+	            })
+			}
+			$scope.logout=function(){
+				console.log($scope.newinterface);
+				$http({
+	                method  : 'POST',
+	                url     : '/apis/manager/logout'
+	            }).success(function(data){
+	            	location.href = data;
+	            })
+			}
+			$scope.addinparam=function(){
+				$scope.newinterface.inparams.push({});
+			}
+			$scope.addoutparam=function(){
+				$scope.newinterface.outparams.push({});
+			}
+			function init(){
+				$scope.newinterface={};
+				$scope.newinterface.inparams=[];
+				$scope.newinterface.outparams=[];
+				$scope.newinterface.inparams.push({});
+				$scope.newinterface.outparams.push({});
+				
+				$scope.paramtype=[
+				                  {key:'String',val:'String'},
+				                  {key:'Double',val:'Double'},
+				                  {key:'Integer',val:'Integer'},
+				                  {key:'Json',val:'Json'}
+				                  ];
+				$scope.fetchlist();
+			}
+			init();
+		}
+	</script>
+</body>
+</html>
