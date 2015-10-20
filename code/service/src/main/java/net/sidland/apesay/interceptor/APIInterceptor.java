@@ -66,9 +66,9 @@ public class APIInterceptor implements HandlerInterceptor {
 		ResponseEntity responseEntity = (ResponseEntity)req.getAttribute(Constant.CLIENT_RESPONSE);
 		String requestURI = req.getRequestURI();
 
-		if (requestURI.startsWith("/api/babyrun/v3/pay/callback")) {
+		if (requestURI.startsWith("/api/service/v3/pay/callback")) {
 			printNative(res,responseEntity);
-		}else if(requestURI.startsWith("/api/babyrun/")){
+		}else if(requestURI.startsWith("/api/service/")){
 			//消息处理
 			try{
 				if(responseEntity.getStatus().equals("10000")){
@@ -80,7 +80,7 @@ public class APIInterceptor implements HandlerInterceptor {
 			}
 			print(res,responseEntity);
 		}else{
-			printKeegooService(res,responseEntity);
+			printService(res,responseEntity);
 		}
 	}
 
@@ -90,8 +90,8 @@ public class APIInterceptor implements HandlerInterceptor {
 		MDC.put("ip", remoteAddr);
 		String requestURI = req.getRequestURI();
 		
-		if(requestURI.startsWith("/api/babyrun/")){
-			logger.info("call keegooBabyRunService:"+requestURI);
+		if(requestURI.startsWith("/api/service/")){
+			logger.info("call apesayService:"+requestURI);
 
 			/**
 			 * 认证接口列表 进行auth认证
@@ -187,7 +187,7 @@ public class APIInterceptor implements HandlerInterceptor {
 			RequestEntity requestEntity = new RequestEntity(req);
 			if(Constant.method_login.equals(requestEntity.getModel())&&requestEntity.getMethod().equalsIgnoreCase(req.getMethod())){
 				logger.info("login......");
-				printKeegooService(res,login(req, requestEntity));
+				printService(res,login(req, requestEntity));
 				return false;
 			}
 			
@@ -196,7 +196,7 @@ public class APIInterceptor implements HandlerInterceptor {
 				ResponseEntity responseEntity = new ResponseEntity();
 				responseEntity.setStatus("10010");
 				responseEntity.setMsg("认证失败");
-				printKeegooService(res,responseEntity);
+				printService(res,responseEntity);
 				return false;
 			}
 		}
@@ -322,7 +322,7 @@ public class APIInterceptor implements HandlerInterceptor {
 	 * @exception
 	 * @since  1.0.0
 	 */
-	protected void printKeegooService(HttpServletResponse res, ResponseEntity responseEntity) {
+	protected void printService(HttpServletResponse res, ResponseEntity responseEntity) {
 		res.setCharacterEncoding(APPUtils.CHARSET);
 		res.setHeader("Content-type", "application/json;charset="+APPUtils.CHARSET);
 		try {

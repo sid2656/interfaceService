@@ -27,7 +27,7 @@ import net.sidland.apesay.utils.DataTypeUtils;
   * @author sid
   */
 @RestController
-@RequestMapping(value = "/api/apesay/v1/interface")
+@RequestMapping(value = "/api/service/v1/interface")
 public class InterfaceController {
 	
 	protected static Logger logger = LoggerFactory.getLogger(InterfaceController.class);

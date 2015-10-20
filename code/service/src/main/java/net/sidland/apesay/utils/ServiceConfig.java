@@ -2,7 +2,7 @@ package net.sidland.apesay.utils;
 
 import java.util.Properties;
 
-public class KeegooConfig {
+public class ServiceConfig {
 	
 	public static String mongoDBHOSTS;
 	public static String momgoDBPORTS;
@@ -48,6 +48,7 @@ public class KeegooConfig {
 			imgUrl = p.getProperty("imgUrl");
 			messageTitle = p.getProperty("messageTitle");
 			notifyUrl=p.getProperty("notify.url");
+			publishFilter = DataTypeUtils.isNotEmpty(p.getProperty("publishFilter"))?Boolean.valueOf(p.getProperty("publishFilter")):true;
 			orderOverTime=DataTypeUtils.isNotEmpty(p.getProperty("order.over.time"))?Integer.valueOf(p.getProperty("order.over.time")):30;
 		} catch (Exception e) {
 			e.printStackTrace();

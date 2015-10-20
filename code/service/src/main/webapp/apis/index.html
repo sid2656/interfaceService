@@ -113,13 +113,12 @@ h1, h2, h3, h4, h5 {
 	<script src="statics/js/bootstrap.min.js"></script>
 	<script src="statics/js/angular.min.js"></script>
 	<script src="statics/js/lib.js"></script>
-	<script src="statics/js/apis.js"></script>
 	<script>
 		function APIListCtrl($scope, $http) {
 			$scope.fetchlist = function() {
 				$http({
 					method : 'GET',
-					url : '/api/babyrun/doc/list'
+					url : '/api/service/doc/list'
 				}).success(function(data) {
 					console.log(data);
 					$scope.list = data;

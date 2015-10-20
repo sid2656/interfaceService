@@ -5,6 +5,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 
 public class Constant {
 	
+	public static final String PROJECT_NAME = "apesay"; 
+	
 	/**
 	 * 客户端输出
 	 */
@@ -168,11 +170,6 @@ public class Constant {
 	 * 产品名称 速印
 	 */
 	public static final String keegoo_babyprinting_app = "babyprinting";
-	
-	/**
-	 * 产品名称 快跑
-	 */
-	public static final String keegoo_babyrun_app = "babyrun";
 	
 	public static final String user_message_List_key = "user_message_list_";
 	

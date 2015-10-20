@@ -19,7 +19,7 @@ import net.sidland.apesay.exception.ServiceException;
 import net.sidland.apesay.utils.Constant;
 import net.sidland.apesay.utils.DataTypeUtils;
 import net.sidland.apesay.utils.DateUtils;
-import net.sidland.apesay.utils.KeegooConfig;
+import net.sidland.apesay.utils.ServiceConfig;
 
 /**
  * 
@@ -48,19 +48,19 @@ public class QuartzService {
     //调用的方法
     public void updateStatus(){
 		//需要做的事情
-    	int overtime = KeegooConfig.orderOverTime;
+    	int overtime = ServiceConfig.orderOverTime;
     	Date date = DateUtils.getDateAddMinutes(new Date(), -overtime);
     	String queryDate = DateUtils.dateToString(date, "yyyy-MM-dd HH:mm:ss");
     	String dateQuery = "";
-    	KeegooConfig.orderUpdateTime = cacheService.get(Constant.model_order+":orderUpdateTime");
+    	ServiceConfig.orderUpdateTime = cacheService.get(Constant.model_order+":orderUpdateTime");
     	//第一次获取30分钟前的所有数据；之后只需要获取时间间隔的数据
-    	if(DataTypeUtils.isNotEmpty(KeegooConfig.orderUpdateTime)){
-    		dateQuery = Constant.CREATED_AT+":{$lte:'"+queryDate+"',$gt:'"+KeegooConfig.orderUpdateTime+"'},";
+    	if(DataTypeUtils.isNotEmpty(ServiceConfig.orderUpdateTime)){
+    		dateQuery = Constant.CREATED_AT+":{$lte:'"+queryDate+"',$gt:'"+ServiceConfig.orderUpdateTime+"'},";
     	}else{
     		dateQuery = Constant.CREATED_AT+":{$lte:'"+queryDate+"'},";
     	}
     	try {
-    		KeegooConfig.orderUpdateTime = queryDate;
+    		ServiceConfig.orderUpdateTime = queryDate;
         	//获取未支付和支付中(主要是防止用户支付途中退出的垃圾订单)
         	String query = "{"+dateQuery + "status:{$in:["+OrderTradeState.ORDER_WZF.getVal()+","+OrderTradeState.ORDER_ZFZ.getVal()+"]}}";
 			JSONObject find = functionsService.find(query, "{}", "{"+Constant.CREATED_AT+":-1}", Constant.model_order, 0, Integer.MAX_VALUE);

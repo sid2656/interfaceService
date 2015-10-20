@@ -17,7 +17,7 @@ import net.sidland.apesay.dao.MongoDAO;
 import net.sidland.apesay.exception.ServiceException;
 import net.sidland.apesay.utils.Constant;
 import net.sidland.apesay.utils.DataTypeUtils;
-import net.sidland.apesay.utils.KeegooConfig;
+import net.sidland.apesay.utils.ServiceConfig;
 
 /**
  * 
@@ -130,7 +130,7 @@ public class FunctionsService {
 	 */
 	private boolean check(String t){
 		if(t != null){
-			Pattern pattern = Pattern.compile(KeegooConfig.mongoDBCheck);  
+			Pattern pattern = Pattern.compile(ServiceConfig.mongoDBCheck);  
 	        Matcher mat= pattern.matcher(t.toLowerCase());  
 	        return mat.find();
 		}else{

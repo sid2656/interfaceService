@@ -39,7 +39,7 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>manageFilter</filter-name>
-		<url-pattern>/api/babyrun/doc/add</url-pattern>
+		<url-pattern>/api/service/doc/add</url-pattern>
 	</filter-mapping>
 	
 	

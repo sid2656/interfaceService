@@ -51,7 +51,7 @@ public class ManagerController {
 			logger.info("用户登录："+newdoc);
 			String username = newdoc.getString(Constant.user_username);
 			String password = newdoc.getString(Constant.user_password);
-			String site = "babyrun";
+			String site = Constant.PROJECT_NAME;
 			JSONObject json = new JSONObject();
 			json.put(Constant.User_loginIdentifying, null);
 			json.put(Constant.user_username, username);
@@ -253,7 +253,7 @@ public class ManagerController {
 		String email = newdoc.getString(Constant.user_email);
 		String roleid = newdoc.getString(Constant.user_roleid);
 		String mobile = newdoc.getString(Constant.user_mobilePhoneNumber);
-		String site = "babyrun";//网站名
+		String site = Constant.PROJECT_NAME;//网站名
 		JSONObject user = new JSONObject();
 		user.put(Constant.user_username, username);
 		user.put(Constant.user_password, password);

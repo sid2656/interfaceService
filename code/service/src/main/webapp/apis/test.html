@@ -90,7 +90,7 @@
 				console.log(id);
 				$http({
 					method : 'GET',
-					url : '/api/babyrun/doc/one/'+id
+					url : '/api/service/doc/one/'+id
 				}).success(function(data) {
 					console.log(data);
 					$scope.data=data;

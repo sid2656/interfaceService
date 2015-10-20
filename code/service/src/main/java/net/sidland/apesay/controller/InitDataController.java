@@ -101,9 +101,9 @@ public class InitDataController implements ApplicationListener<ApplicationEvent>
 	private void initAccessList(JSONObject results) {
 		JSONArray accessListAll = results.getJSONArray(Constant.RESULTS);
 		// 初始化APIurl为非授权
-		apis.put("/api/babyrun/doc/list", false);
-		apis.put("/api/babyrun/doc/add", false);
-		apis.put("/api/babyrun/doc/one", false);
+		apis.put("/api/service/doc/list", false);
+		apis.put("/api/service/doc/add", false);
+		apis.put("/api/service/doc/one", false);
 		for (Object object : accessListAll) {
 			JSONObject jo = (JSONObject) object;
 			Boolean isPrivate = (Boolean) jo.get("private");

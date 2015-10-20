@@ -66,7 +66,7 @@ public class UserMessageService {
 		
 		int action = -1;
 		String messageKey = "",messageCountKey = "";
-		if(uri.startsWith("/api/babyrun/v2/expcomment/save")) {//评论
+		if(uri.startsWith("/api/service/v2/expcomment/save")) {//评论
 			JSONObject entityJson = (JSONObject)entity.getResult();
 			if(!DataTypeUtils.isNotEmpty(entityJson.getString(Constant.OBJECTID))) return;
 			action = 0;
@@ -101,7 +101,7 @@ public class UserMessageService {
 			logger.info(messageKey+":"+message.toString());
 			cacheService.push(messageKey, message.toString());
 			cacheService.incrBy(messageCountKey, 1L);
-		}else if(uri.startsWith("/api/babyrun/v2/exppraise/save")) {//赞
+		}else if(uri.startsWith("/api/service/v2/exppraise/save")) {//赞
 			JSONObject entityJson = (JSONObject)entity.getResult();
 			if(!DataTypeUtils.isNotEmpty(entityJson.getString(Constant.OBJECTID))) return;
 			action = 2;
@@ -125,7 +125,7 @@ public class UserMessageService {
 			logger.info(messageKey+":"+message.toString());
 			cacheService.push(messageKey, message.toString());
 			cacheService.incrBy(messageCountKey, 1L);
-		}else if(uri.startsWith("/api/babyrun/v2/user/followee/add")) {//关注
+		}else if(uri.startsWith("/api/service/v2/user/followee/add")) {//关注
 			JSONArray entityArray = (JSONArray)entity.getResult();
 			for (int i=0;i<entityArray.size();i++) {
 				JSONObject entityJson = entityArray.getJSONObject(i);
@@ -188,7 +188,7 @@ public class UserMessageService {
 		int action = -1;//0 评论，1回复，2关注
 		JSONObject userMessage = new JSONObject();
 
-		if(uri.startsWith("/api/babyrun/v3/secondHandGoods/comment/add")){
+		if(uri.startsWith("/api/service/v3/secondHandGoods/comment/add")){
 			//retry
 			//retryCommentId
 			//retryUserId
@@ -228,7 +228,7 @@ public class UserMessageService {
 
 			}
 
-		}else if(uri.startsWith("/api/babyrun/v3/secondHandGoods/follow/add")){
+		}else if(uri.startsWith("/api/service/v3/secondHandGoods/follow/add")){
 			String targetId = ServletRequestUtils.getStringParameter(request, "targetId","");
 			//通过tid查找 该贴子是谁发的
 			JSONObject secondHandGoods = apiService.get("SecondhandGoods", targetId);
@@ -248,7 +248,7 @@ public class UserMessageService {
 			push(userMessage, new String[]{toUserId});
 
 			
-		}else if(uri.startsWith("/api/babyrun/v3/userActivity/comment/add")){
+		}else if(uri.startsWith("/api/service/v3/userActivity/comment/add")){
 			//retry
 			//retryCommentId
 			//retryUserId
@@ -287,7 +287,7 @@ public class UserMessageService {
 				cacheService.incrBy(Constant.user_message_count_key + retryUserId, 1L);
 				push(userMessage, new String[]{toUserId,retryUserId});
 			}
-		}else if(uri.startsWith("/api/babyrun/v3/userActivity/followee/add")){
+		}else if(uri.startsWith("/api/service/v3/userActivity/followee/add")){
 			String targetId = ServletRequestUtils.getStringParameter(request, "targetId","");
 			//通过tid查找 该贴子是谁发的
 			JSONObject secondHandGoods = apiService.get("UserActivity", targetId);
@@ -306,7 +306,7 @@ public class UserMessageService {
 			cacheService.incrBy(Constant.user_message_count_key + toUserId, 1L);
 			push(userMessage, new String[]{toUserId});
 			
-		}else if(uri.startsWith("/api/babyrun/v3/experience/comment/add")){
+		}else if(uri.startsWith("/api/service/v3/experience/comment/add")){
 			//retry
 			//retryCommentId
 			//retryUserId
@@ -346,7 +346,7 @@ public class UserMessageService {
 				push(userMessage, new String[]{toUserId,retryUserId});
 
 			}
-		}else if(uri.startsWith("/api/babyrun/v3/experience/follow/add")){
+		}else if(uri.startsWith("/api/service/v3/experience/follow/add")){
 			String targetId = ServletRequestUtils.getStringParameter(request, "expId","");
 			//通过tid查找 该贴子是谁发的
 			JSONObject secondHandGoods = apiService.get("experience", targetId);
@@ -365,7 +365,7 @@ public class UserMessageService {
 			cacheService.incrBy(Constant.user_message_count_key + toUserId, 1L);
 			push(userMessage, new String[]{toUserId});
 
-		}else if(uri.startsWith("/api/babyrun/v3/userQuestion/comment/add")){
+		}else if(uri.startsWith("/api/service/v3/userQuestion/comment/add")){
 			//retry
 			//retryCommentId
 			//retryUserId
@@ -406,9 +406,9 @@ public class UserMessageService {
 
 			}
 			
-		}else if(uri.startsWith("/api/babyrun/v3/userQuestion/follow/add")){//问答没有关注
+		}else if(uri.startsWith("/api/service/v3/userQuestion/follow/add")){//问答没有关注
 			
-		}else if(uri.startsWith("/api/babyrun/v2/user/followee/add")){
+		}else if(uri.startsWith("/api/service/v2/user/followee/add")){
 			JSONArray entityArray = (JSONArray)entity.getResult();
 			for (int i=0;i<entityArray.size();i++) {
 				JSONObject entityJson = entityArray.getJSONObject(i);
@@ -455,17 +455,17 @@ public class UserMessageService {
 		
 		//朋友圈和个人中心
 		t = -1;//重新设置t值
-		if(uri.startsWith("/api/babyrun/v3/secondHandGoods/add")){
+		if(uri.startsWith("/api/service/v3/secondHandGoods/add")){
 			t = 0;
-		}else if(uri.startsWith("/api/babyrun/v3/userActivity/add")){
+		}else if(uri.startsWith("/api/service/v3/userActivity/add")){
 			t = 1;
-		}else if(uri.startsWith("/api/babyrun/v3/user/group/create")){
+		}else if(uri.startsWith("/api/service/v3/user/group/create")){
 			t = 2;
-		}else if(uri.startsWith("/api/babyrun/v3/experience/add")){
+		}else if(uri.startsWith("/api/service/v3/experience/add")){
 			t = 3;
-		}else if(uri.startsWith("/api/babyrun/v3/userQuestion/add")){
+		}else if(uri.startsWith("/api/service/v3/userQuestion/add")){
 			t = 4;
-		}else if(uri.startsWith("/api/babyrun/v3/userQuestion/add")){
+		}else if(uri.startsWith("/api/service/v3/userQuestion/add")){
 			t = 5;
 		}
 		

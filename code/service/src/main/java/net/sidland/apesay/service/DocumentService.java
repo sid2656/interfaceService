@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import net.sidland.apesay.exception.ServiceException;
 import net.sidland.apesay.utils.Constant;
-import net.sidland.apesay.utils.KeegooConfig;
+import net.sidland.apesay.utils.ServiceConfig;
 
 @Component
 public class DocumentService {
@@ -26,7 +26,10 @@ public class DocumentService {
 		return functionsService.find("{}", "{}", "{}", MODEL, 0, Integer.MAX_VALUE);
 	}
 	public JSONObject listPublished() throws ServiceException{
-		return functionsService.find("{published:true}", "{}", "{}", MODEL, 0, Integer.MAX_VALUE);
+		if (ServiceConfig.publishFilter) {
+			return functionsService.find("{published:true}", "{}", "{}", MODEL, 0, Integer.MAX_VALUE);
+		}
+		return functionsService.find("{}", "{}", "{}", MODEL, 0, Integer.MAX_VALUE);
 	}
 	public JSONObject one(String id) throws ServiceException{
 		return apiService.get(MODEL, id);

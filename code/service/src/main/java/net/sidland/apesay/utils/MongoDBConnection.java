@@ -45,7 +45,7 @@ public class MongoDBConnection {
 			try {
 				MongoClientOptions.Builder build = new MongoClientOptions.Builder();
 				//build.autoConnectRetry(true);//是否连接自动重试
-				build.connectionsPerHost(Integer.valueOf(KeegooConfig.mongodbConnectionsCount));//连接数
+				build.connectionsPerHost(Integer.valueOf(ServiceConfig.mongodbConnectionsCount));//连接数
 				build.connectTimeout(30000);//连接超时时间
 				build.maxWaitTime(120000);//最大等待时间
 				build.socketKeepAlive(true);//保持连接
@@ -55,9 +55,9 @@ public class MongoDBConnection {
 				MongoClientOptions mongoClientOptions = build.build();
 
 				List<ServerAddress> addresses = new ArrayList<ServerAddress>();
-				if (DataTypeUtils.isNotEmpty(KeegooConfig.mongoDBHOSTS)) {
-					String[] hosts = KeegooConfig.mongoDBHOSTS.split(",");
-					String[] ports = KeegooConfig.momgoDBPORTS.split(",");
+				if (DataTypeUtils.isNotEmpty(ServiceConfig.mongoDBHOSTS)) {
+					String[] hosts = ServiceConfig.mongoDBHOSTS.split(",");
+					String[] ports = ServiceConfig.momgoDBPORTS.split(",");
 					for (int i = 0; i < hosts.length; i++) {
 						ServerAddress address = new ServerAddress(hosts[i], Integer.valueOf(ports[i]));
 						addresses.add(address);
@@ -65,7 +65,7 @@ public class MongoDBConnection {
 					instance = new MongoClient(addresses,mongoClientOptions);
 					MongoDBConnection.isShard = true;
 				}else{
-					instance = new MongoClient(KeegooConfig.mongoDBIP, Integer.valueOf(KeegooConfig.mongoDBPORT));
+					instance = new MongoClient(ServiceConfig.mongoDBIP, Integer.valueOf(ServiceConfig.mongoDBPORT));
 					MongoDBConnection.isShard = false;
 				}
 			} catch (NumberFormatException e) {

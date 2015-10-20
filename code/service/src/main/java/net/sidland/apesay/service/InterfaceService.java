@@ -24,6 +24,8 @@ public class InterfaceService {
 
 	protected static Logger logger = LoggerFactory.getLogger(InterfaceService.class);
 	
+	private static String model = "document";
+	
 	@Autowired
 	private APIService apiService;
 	
@@ -51,9 +53,10 @@ public class InterfaceService {
 	 * @throws Exception
 	 */
 	public JSONObject list(String userId,int skip,int size) throws Exception {
-		JSONObject query = new JSONObject();
-		query.put("userId", userId);
-		JSONObject jsonObject = functionsService.find(query.toJSONString(), "{}", "{"+Constant.CREATED_AT+":-1}", Constant.model_interface, skip, size);
+//		JSONObject query = new JSONObject();
+//		query.put("userId", userId);
+		JSONObject jsonObject = functionsService.find("{}", "{}", "{"+Constant.CREATED_AT+":-1}", model, skip, size);
+//		JSONObject jsonObject = functionsService.find(query.toJSONString(), "{}", "{"+Constant.CREATED_AT+":-1}", Constant.model_interface, skip, size);
 		JSONArray results = jsonObject.getJSONArray(Constant.RESULTS);
 		if(results.size()>0){
 			return results.getJSONObject(0);

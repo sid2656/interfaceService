@@ -53,7 +53,7 @@ public class UserService {
 		logger.info("register data:"+user.toString());
 		String reqmobilePhoneNumber = user.getString(Constant.user_mobilePhoneNumber);
 		String requsername = user.getString(Constant.user_username);
-		if("babyrun".equals(user.getString(Constant.user_site))){
+		if(Constant.PROJECT_NAME.equals(user.getString(Constant.user_site))){
 			logger.info(reqmobilePhoneNumber);
 			if (!DataTypeUtils.isNotEmpty(reqmobilePhoneNumber) || mobilePhoneNumberExists(reqmobilePhoneNumber)) return null;
 			//if (StringUtils.isBlank(requsername) || usernameExists(requsername)) return null;
@@ -72,7 +72,7 @@ public class UserService {
 			apiService.update(Constant.model_users, "{easemob:1}", dbUser.getString(Constant.OBJECTID));
 		}
 		JSONObject login = new JSONObject();
-		if(!"babyrun".equals(user.getString(Constant.user_site))){
+		if(!Constant.PROJECT_NAME.equals(user.getString(Constant.user_site))){
 			login.put(Constant.User_loginIdentifying, requsername);
 		}else{
 			login.put(Constant.User_loginIdentifying, user.getString(Constant.user_mobilePhoneNumber));
@@ -575,7 +575,7 @@ public class UserService {
 	 * @throws Exception
 	 */
 	public void sendMobleVerifyCode(String mobile) throws Exception {
-		verifyCodeService.sendMobileCode(mobile, 120, "105", Constant.keegoo_babyrun_app);
+		verifyCodeService.sendMobileCode(mobile, 120, "105", Constant.PROJECT_NAME);
 	}
 	
 	/**
@@ -586,7 +586,7 @@ public class UserService {
 	 * @throws Exception
 	 */
 	public boolean verifyCode(String mobile, String code) throws Exception {
-		boolean b = verifyCodeService.verifyMobileCode(mobile, code, Constant.keegoo_babyrun_app);
+		boolean b = verifyCodeService.verifyMobileCode(mobile, code, Constant.PROJECT_NAME);
 		return b;
 	}
 	

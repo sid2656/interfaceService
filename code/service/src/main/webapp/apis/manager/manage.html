@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="HandheldFriendly" content="True" />
 <meta name="MobileOptimized" content="320" />
-    <title>奶瓶快跑接口新增</title>
+    <title>接口新增</title>
 
     <link href="../statics/css/bootstrap.min.css" rel="stylesheet">
     <link href="../statics/css/base.css" rel="stylesheet">
@@ -23,7 +23,7 @@
 <header class="header">
     <div class="row-fluid" >
         <div class="" style="position:relative;">
-            <a class="logo" href="/">奶瓶快跑接口管理工具</span></a>
+            <a class="logo" href="/">接口管理工具</span></a>
 			<div style="float:right;margin:10px;">
 				<a href="../index.html">展示界面</a>
 			</div>
@@ -186,7 +186,6 @@
 <script src="../statics/js/bootstrap.min.js"></script>
 <script src="../statics/js/angular.min.js"></script>
 <script src="../statics/js/lib.js"></script>
-<script src="../statics/js/apis.js"></script>
 	<script>
 		Array.prototype.remove=function(dx) 
 		{ 
@@ -205,7 +204,7 @@
 			$scope.edit=function(id){
 				$http({
 					method:'GET',
-					url:'/api/babyrun/doc/one/'+id
+					url:'/api/service/doc/one/'+id
 				}).success(function(data){
 					console.log(data);
 					$scope.newinterface=data;
@@ -224,7 +223,7 @@
 			$scope.fetchlist=function(){
 				$http({
 	                method  : 'GET',
-	                url     : '/api/babyrun/doc/list'
+	                url     : '/api/service/doc/list'
 	            }).success(function(data){
 	            	console.log(data);
 	            	$scope.list=data;
@@ -234,7 +233,7 @@
 				console.log($scope.newinterface);
 				$http({
 	                method  : 'POST',
-	                url     : '/api/babyrun/doc/add',
+	                url     : '/api/service/doc/add',
 	                data    :$scope.newinterface
 	            }).success(function(data){
 	            	$scope.fetchlist();

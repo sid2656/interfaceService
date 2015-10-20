@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -31,8 +32,8 @@ import net.sidland.apesay.exception.ServiceException;
 import net.sidland.apesay.utils.Constant;
 import net.sidland.apesay.utils.DataTypeUtils;
 import net.sidland.apesay.utils.DateUtils;
-import net.sidland.apesay.utils.KeegooConfig;
 import net.sidland.apesay.utils.MongoDBConnection;
+import net.sidland.apesay.utils.ServiceConfig;
 
 /**
  * 
@@ -48,13 +49,11 @@ public class MongoDAO {
 	private CacheService cacheService;
 	
 	public static DB db;
-	public static MongoDatabase babyrunDatabase;
 
 	protected static Logger logger = LoggerFactory.getLogger(MongoDAO.class);
 	
 	static {
-		db = MongoDBConnection.getMongoClient().getDB(KeegooConfig.mongoDBName);
-		babyrunDatabase= MongoDBConnection.getMongoClient().getDatabase(KeegooConfig.mongoDBName);
+		db = MongoDBConnection.getMongoClient().getDB(ServiceConfig.mongoDBName);
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class MongoDAO {
 	public JSONObject save(String model, String json) throws ServiceException {
 		//新增的集合进行按系统主键进行分片
 		if(!db.collectionExists(model)){
-			shardCollection(KeegooConfig.mongoDBName, model, "_id");
+			createCollection(ServiceConfig.mongoDBName, model, "_id");
 		}
 		String date = DateUtils.date24ToString(new Date());
 		DBObject dbObject = (DBObject) JSON.parse(json);
@@ -97,18 +96,6 @@ public class MongoDAO {
 		returnValue.put(Constant.CREATED_AT, date);
 		returnValue.put(Constant.UPDATED_AT, date);
 		return returnValue;
-	}
-
-	public void saveTemp(String model, String json) throws ServiceException {
-		//新增的集合进行按系统主键进行分片
-		if(!db.collectionExists(model)){
-			shardCollection(KeegooConfig.mongoDBName, model, "_id");
-		}
-		DBCollection dbCollection = db.getCollection(model);
-		DBObject dbObject = (DBObject) JSON.parse(json);
-		ObjectId objectId = new ObjectId(String.valueOf(dbObject.get(Constant.OBJECTID)));
-		dbObject.put("_id", objectId);// 系统主键
-		dbCollection.insert(dbObject, WriteConcern.SAFE);
 	}
 
 	
@@ -268,14 +255,13 @@ public class MongoDAO {
 		DBObject dbObject = null;
 		queryCondition.put("$or", values);
 		DBObject user = dbCollection.findOne(queryCondition);
-		if(site.equals("babyrun")){
+		if(Constant.PROJECT_NAME.equals(site)){
 			if(user==null) return null;
-//			String salt = Constant.sha512_salt;
-//			if(user.containsField("salt")&&DataTypeUtils.isNotEmpty((String)user.get("salt"))){
-//				salt = (String)user.get("salt");
-//			}
-//			String password = new Sha512Hash((String)query.get(Constant.user_password), salt, 513).toBase64();
-			String password = "";
+			String salt = Constant.sha512_salt;
+			if(user.containsField("salt")&&DataTypeUtils.isNotEmpty((String)user.get("salt"))){
+				salt = (String)user.get("salt");
+			}
+			String password = new Sha512Hash((String)query.get(Constant.user_password), salt, 513).toBase64();
 			queryCondition.put(Constant.user_password, password);
 			dbObject = dbCollection.findOne(queryCondition);
 		}else{
@@ -496,23 +482,29 @@ public class MongoDAO {
 	}
 	
 	//对集合启动分片，前提是所在数据库已启动分片
-	private boolean shardCollection(String dbname,String collection,String key){
-		if (MongoDBConnection.isShard) {
-			logger.info("新的集合"+collection+"启动分片");
-			MongoDatabase admin = MongoDBConnection.getMongoClient().getDatabase("admin");
-			BasicDBObject cmd = new BasicDBObject();
-			BasicDBObject shardKeys = new BasicDBObject();
-			shardKeys.put("_id",  1);shardKeys.put(Constant.OBJECTID,  1);
-			cmd.put("shardcollection", dbname+"."+collection);
-			cmd.put("key", shardKeys);
-			Document result = admin.runCommand(cmd);
-			logger.info("mongodb cmd:"+cmd);
-			logger.info("document:"+result.toJson());
-			if(result==null||result.isEmpty()){
-				return false;
-			}else if(result.getDouble("ok")>0){
-				return true;
+	private boolean createCollection(String dbname,String collection,String key){
+		try {
+			if (MongoDBConnection.isShard) {
+				logger.info("新的集合"+collection+"启动分片");
+				MongoDatabase admin = MongoDBConnection.getMongoClient().getDatabase("admin");
+				BasicDBObject cmd = new BasicDBObject();
+				BasicDBObject shardKeys = new BasicDBObject();
+				shardKeys.put("_id",  1);shardKeys.put(Constant.OBJECTID,  1);
+				cmd.put("shardcollection", dbname+"."+collection);
+				cmd.put("key", shardKeys);
+				Document result = admin.runCommand(cmd);
+				logger.info("mongodb cmd:"+cmd);
+				logger.info("document:"+result.toJson());
+				if(result==null||result.isEmpty()){
+					return false;
+				}else if(result.getDouble("ok")>0){
+					return true;
+				}
+			}else{
+				db.getCollection(collection);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return false;
 	}
